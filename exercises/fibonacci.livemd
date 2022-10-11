@@ -50,9 +50,18 @@ Fibonacci.sequence(4)
 
 ```elixir
 defmodule Fibonacci do
+  def sequence(0), do: [0]
+  def sequence(1), do: [0, 1]
+
   def sequence(n) do
+    [0, 1] ++
+      Enum.reduce(2..n, [0, 1], fn _, acc -> [Enum.at(acc, -1) + Enum.at(acc, -2)] ++ acc end)
   end
 end
+```
+
+```elixir
+Fibonacci.sequence(4)
 ```
 
 ## Competition
