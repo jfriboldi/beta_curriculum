@@ -49,14 +49,14 @@ In the Elixir cell below, try listing the parent directory of this Livebook file
 [File.ls/1](https://hexdocs.pm/elixir/File.html#ls/1).
 
 ```elixir
-
+File.ls("../")
 ```
 
 In the Elixir cell below, try listing all the material in the `reading` folder. Use `"reading"` as
 the argument to [File.ls/1](https://hexdocs.pm/elixir/File.html#ls/1)
 
 ```elixir
-
+File.ls("reading")
 ```
 
 ## File.read/1
@@ -72,7 +72,7 @@ Notice that if you change its contents from your editor, the return value below 
 We now have persistence!
 
 ```elixir
-
+File.read("data/example_file")
 ```
 
 If you try to read a non-existing file, you'll retrieve an error `{:error, :enoent}`.  `:enoent` is short for **Error No Entry**.
@@ -106,8 +106,8 @@ In the Elixir cell below, try entering your `name` in the empty string below, an
 `File.mkdir("#{name}_made_this")`
 
 ```elixir
-name = ""
-# File.mkdir("data/#{name}_made_this")
+name = "foo"
+File.mkdir("data/#{name}_made_this")
 ```
 
 `mkdir/1` can only create a folder in the current directory. It cannot create nested folders.
@@ -134,7 +134,7 @@ In the Elixir cell below, change the content of `"hello, world!"` then open the 
 Notice that the `write_test` file has different content now.
 
 ```elixir
-File.write("data/write_test", "hello, world!")
+File.write("data/write_test", "foo, bar")
 ```
 
 ### Invalid File Locations
@@ -186,7 +186,7 @@ In the Elixir cell below, delete the written file `"data/delete_me"` using
 [File.rm/1](https://hexdocs.pm/elixir/File.html#rm/1). Check the `data` folder to make sure.
 
 ```elixir
-File.write("data/delete_me", "")
+File.rm("data/delete_me")
 ```
 
 ## Persisting Erlang Terms
@@ -247,6 +247,10 @@ a binary and convert the binary back into a list.
 
 ```elixir
 grocery_list = ["eggs", "cheese", "sugar"]
+File.write("data/grocery_list", :erlang.term_to_binary(grocery_list))
+
+bin = File.read!("data/grocery_list")
+:erlang.binary_to_term(bin)
 ```
 
 ## Handling Large Files
@@ -461,13 +465,14 @@ and discover information when they need it.
 In the Elixir cell below, take the written file `data/copy_example` and copy the information it contains into a new file `data/copied_example`.
 
 ```elixir
-File.write("data/copy_example", "Copy me!")
+File.cp("data/copy_example", "data/copied_example")
 ```
 
 To confirm you did it correctly, evaluate the Elixir cell below.
 
 ```elixir
 Utils.feedback(:copy_file, "copied_example")
+# File.ls()
 ```
 
 ## Commit Your Progress

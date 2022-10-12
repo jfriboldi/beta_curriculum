@@ -382,11 +382,25 @@ defmodule MathTest do
     assert Math.add(1, 1) === 2
   end
 
-  test "add/2 floats"
-  test "add/2 strings"
-  test "add/2 lists"
-  test "add/2 maps"
-  test "add/2 keyword lists"
+  test "add/2 floats" do
+    assert Math.add(4.5, 4.5) === 9.0
+  end
+
+  test "add/2 strings" do
+    assert Math.add("a", "b") == "ab"
+  end
+
+  test "add/2 lists" do
+    assert Math.add([1], [2]) == [1, 2]
+  end
+
+  test "add/2 maps" do
+    assert Math.add(%{one: 1}, %{two: 2}) == %{one: 1, two: 2}
+  end
+
+  test "add/2 keyword lists" do
+    assert Math.add([two: 2], two: 2) == [one: 1, two: 2]
+  end
 end
 
 ExUnit.run()
@@ -634,21 +648,55 @@ defmodule MathTest do
   use ExUnit.Case
 
   describe "Math.add/2" do
-    test "integers"
-    test "floats"
-    test "strings"
-    test "lists"
-    test "maps"
-    test "keyword lists"
+    test "integers" do
+      assert Math.add(1, 1) === 0
+    end
+
+    test "floats" do
+      assert Math.add(4.5, 4.5) === 0
+    end
+
+    test "strings" do
+      assert Math.add("ab", "b") == "ab"
+    end
+
+    test "lists" do
+      assert Math.add([1], [2]) == [1, 2]
+    end
+
+    test "maps" do
+      assert Math.add(%{one: 1}, %{two: 2}) == %{one: 1, two: 2}
+    end
+
+    test "keyword lists" do
+      assert Math.add([two: 2], two: 2) == [one: 1, two: 2]
+    end
   end
 
   describe "Math.subtract/2" do
-    test "integers"
-    test "floats"
-    test "strings"
-    test "lists"
-    test "maps"
-    test "keyword lists"
+    test "integers" do
+      assert Math.subtract(8, 4) === 4
+    end
+
+    test "floats" do
+      assert Math.subtract(4.5, 2.5) === 2.0
+    end
+
+    test "strings" do
+      assert Math.subtract("ab", "b") == "a"
+    end
+
+    test "lists" do
+      assert Math.subtract([1, 2], [2]) == [1]
+    end
+
+    test "maps" do
+      assert Math.subtract(%{one: 1, two: 2}, %{one: 1}) == %{two: 2}
+    end
+
+    test "keyword lists" do
+      assert Math.subtract([one: 1, two: 2], two: 2) == [one: 1]
+    end
   end
 end
 
@@ -819,9 +867,9 @@ Feel free to write your own `configure/1` function to experiment with configurat
 ```elixir
 ExUnit.start(auto_run: false)
 
-ExUnit.configure(exclude: :my_module_tag, include: :my_descibe_tag, include: :my_tag)
-# ExUnit.configure(exclude: :my_descibe_tag, exclude: :my_tag)
-# ExUnit.configure(only: :my_descibe_tag)
+# ExUnit.configure(exclude: :my_module_tag, include: :my_describe_tag, include: :my_tag)
+# ExUnit.configure(exclude: :my_describe_tag, exclude: :my_tag)
+ExUnit.configure(only: :my_descibe_tag)
 # ExUnit.configure(only: :my_tag)
 
 defmodule TagTest do

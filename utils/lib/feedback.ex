@@ -75,7 +75,7 @@ defmodule Utils.Feedback do
 
   feedback :copy_file do
     file_name = get_answers()
-    assert {:ok, "Copy me!"} = File.read("../data/#{file_name}")
+    assert {:ok, "Copy me!"} = File.read("data/#{file_name}")
   end
 
   feedback :item_generator_search do
