@@ -139,7 +139,32 @@ GenServer.call(cache, {:get, :key1})
 ```elixir
 defmodule Cache do
   use GenServer
+
+  @impl true
+  def init(_opts) do
+    {:ok, {}}
+  end
+
+  @impl true
+  def handle_call({:set, payload}, _from, state) do
+    new_state = Tuple.insert_at(state, 0, payload)
+    response = {:ok, new_state}
+    {:reply, response, new_state}
+  end
+
+  @impl true
+  def handle_call({:get, key}, _from, state) do
+    response = {:ok, state[key]}
+    {:reply, response}
+  end
 end
+
+{:ok, cache} = GenServer.start_link(Cache, {})
+```
+
+```elixir
+# GenServer.call(cache, {:set, {:key1, "value"}})
+# GenServer.call(cache, {:get, :key1})
 ```
 
 ## Agent
@@ -269,7 +294,25 @@ Counter.increment(counter)
 ```elixir
 defmodule Counter do
   use Agent
+
+  def start_link(initial_state) do
+    Agent.start_link(fn -> initial_state end, name: __MODULE__)
+  end
+
+  def get() do
+    Agent.get(__MODULE__, fn state -> state end)
+  end
+
+  def increment() do
+    Agent.update(__MODULE__, fn state -> state + 1 end)
+  end
 end
+```
+
+```elixir
+Counter.get()
+Counter.increment()
+Counter.get()
 ```
 
 ### Further Reading
@@ -360,7 +403,11 @@ secret identities.
 ```
 
 ```elixir
+:ets.new(:super_heroes, [:named_table])
+```
 
+```elixir
+:ets.insert(:super_heroes, {"Spider Man", "Peter Parker"})
 ```
 
 ### ETS Configuration
@@ -462,7 +509,13 @@ Demonstrate that the table will not allow read/write operations to the `:ets` ta
 from another process.
 
 ```elixir
+foo = :ets.new(:private_example, [:ordered_set, :private])
+```
 
+```elixir
+# Task.start(fn ->
+#   :ets.insert(foo, {:key, "value"})
+# end)
 ```
 
 ## Race Conditions
